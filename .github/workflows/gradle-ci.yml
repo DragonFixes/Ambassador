@@ -10,14 +10,14 @@ name: Java CI with Gradle
 on:
   push:
     branches:
-      - "main"
+      - "master"
       - "release"
       - "develop"
       - "hotfix"
       - "feature/**"
   pull_request:
     branches:
-      - "main"
+      - "master"
       - "release"
       - "develop"
       - "hotfix"
