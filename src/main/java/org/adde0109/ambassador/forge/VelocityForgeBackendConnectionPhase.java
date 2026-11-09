@@ -1,6 +1,5 @@
 package org.adde0109.ambassador.forge;
 
-import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.proxy.connection.MinecraftConnection;
 import com.velocitypowered.proxy.connection.backend.BackendConnectionPhase;
 import com.velocitypowered.proxy.connection.backend.VelocityServerConnection;
@@ -34,10 +33,6 @@ public enum VelocityForgeBackendConnectionPhase implements BackendConnectionPhas
     @Override
     public void onLoginSuccess(VelocityServerConnection serverCon, ConnectedPlayer player) {
       serverCon.setConnectionPhase(VelocityForgeBackendConnectionPhase.COMPLETE);
-
-      if (!isMinecraft1201OrLaterProtocol(serverCon.getConnection().getProtocolVersion())) {
-        return;
-      }
 
       if (serverCon.getConnection().getChannel().pipeline().get(ForgeConstants.COMMAND_ERROR_CATCHER) == null) {
         serverCon.getConnection().getChannel().pipeline().addBefore(Connections.MINECRAFT_DECODER,
@@ -192,18 +187,13 @@ public enum VelocityForgeBackendConnectionPhase implements BackendConnectionPhas
 
   @Override
   public boolean handle(VelocityServerConnection server, ConnectedPlayer player, PluginMessagePacket message) {
-    if (message.getChannel().equals("ambassador:commands")
-            && isMinecraft1201OrLaterProtocol(server.getConnection().getProtocolVersion())) {
+    if (message.getChannel().equals("ambassador:commands")) {
       AvailableCommandsPacket packet = new AvailableCommandsPacket();
       packet.decode(message.content(), ProtocolUtils.Direction.CLIENTBOUND,server.getConnection().getProtocolVersion());
       server.getConnection().getActiveSessionHandler().handle(packet);
       return true;
     }
     return false;
-  }
-
-  private static boolean isMinecraft1201OrLaterProtocol(ProtocolVersion protocolVersion) {
-    return protocolVersion.getProtocol() >= 763;
   }
 
   public boolean consideredComplete() {
