@@ -2,7 +2,6 @@ package org.adde0109.ambassador.forge;
 
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.util.ModInfo;
-import com.velocitypowered.proxy.VelocityServer;
 import com.velocitypowered.proxy.connection.MinecraftConnection;
 import com.velocitypowered.proxy.connection.backend.VelocityServerConnection;
 import com.velocitypowered.proxy.connection.client.ClientConnectionPhase;
@@ -25,7 +24,6 @@ import org.adde0109.ambassador.velocity.client.OutboundSuccessHolder;
 import org.adde0109.ambassador.velocity.client.ClientPacketQueue;
 
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.TimeUnit;
 
 public enum VelocityForgeClientConnectionPhase implements ClientConnectionPhase {
 
@@ -47,8 +45,6 @@ public enum VelocityForgeClientConnectionPhase implements ClientConnectionPhase 
   WAITING_RESET() {
     @Override
     void onTransitionToNewPhase(ConnectedPlayer player) {
-      //We unregister so no plugin sees this client while the client is being reset.
-      ((VelocityServer) Ambassador.getInstance().server).unregisterConnection(player);
       player.getConnection().getChannel().pipeline().addAfter(Connections.MINECRAFT_ENCODER,
               ForgeConstants.LOGIN_PACKET_QUEUE, new ClientPacketQueue(StateRegistry.PLAY));
       if (player.getConnection().getChannel().pipeline().get(ForgeConstants.PLUGIN_PACKET_QUEUE) == null)
@@ -92,7 +88,6 @@ public enum VelocityForgeClientConnectionPhase implements ClientConnectionPhase 
       connection.setState(StateRegistry.PLAY);
       //Plugins may now send packets to client
       player.getConnection().getChannel().pipeline().remove(ForgeConstants.PLUGIN_PACKET_QUEUE);
-      ((VelocityServer) Ambassador.getInstance().server).registerConnection(player);
     }
 
     @Override
