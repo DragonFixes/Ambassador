@@ -15,6 +15,13 @@ repositories {
     }
 }
 
+// Velocity-CTD 4.x is built for Java 25 and its modules refuse to resolve for older targets.
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
+}
+
 dependencies {
     compileOnly("com.velocitypowered:velocity-api")
     compileOnly("com.velocitypowered:velocity-proxy")
