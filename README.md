@@ -1,6 +1,6 @@
 # Ambassador
 
-> This fork has support for Velocity-CTD in version 4.1.0, it works stably according to the tests carried out, but it is still under development to adapt it perfectly to Velocity-CTD.
+> This fork targets [Velocity-CTD](https://github.com/GemstoneGG/Velocity-CTD) 4.x (built against `build-417`) and needs Java 25. Clone with `--recurse-submodules`, then build with `.\gradlew.bat shadowJar`; the jar lands in `build/libs/`.
 
 This is a Velocity plugin that makes it possible to host a modern Forge server behind a Velocity proxy!
 
